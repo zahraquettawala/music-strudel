@@ -2,24 +2,20 @@
 
 Zahra's piano practice + live-coding notebook.
 
-## ▶️ Playable prototypes
+## ▶️ Playable prototype
 
-**DON'T BELIEVE IT piano loop player** — served from this repo with GitHub Pages:
+**🎀 Creator Studio** — the main page of this repo's site:
 https://zahraquettawala.github.io/music-strudel/
 
-Tap play to hear the loop, watch the chords light up on the piano, or mute the piano and practice over the drums + bass.
-
-**🎚️ Creator Studio — one page, every record:**
-https://zahraquettawala.github.io/music-strudel/studio/
-
-A wooden record-player studio with a **song switcher** (Love It If We Made It,
-DON'T BELIEVE IT, and a Create Original mode). Every song has separated stems
-(drums / bass / guitar / keys / effects) with their own faders, an arrangement
-builder (reorder, duplicate and stack section blocks), a step-sequencer beat
-layer you can add on top of any song, and a vocal booth: plug in a mic, sing
-over the track and record takes (captured in the browser, never uploaded).
-Create Original lets you pick a tempo, four chords and a style and generates
-a loop of your own.
+A soft, pastel record studio with a **song switcher** (Love It If We Made It,
+DON'T BELIEVE IT, and a Create Original mode). Stems are laid out as DAW-style
+track lanes (drums / bass / guitar / keys / effects) with mute, solo and volume
+per track, and clips that show exactly where each part plays in the real song.
+Rearrange the sections, layer your own beat with the step sequencer, and sing
+over everything in the vocal booth — takes are recorded in the browser, never
+uploaded. Create Original lets you pick a tempo, four chords and a style and
+generates a loop of your own. (The older standalone DON'T BELIEVE IT player was
+retired — that song lives in the studio now.)
 
 ## Contents
 
