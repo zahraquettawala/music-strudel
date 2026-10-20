@@ -278,19 +278,19 @@ const SONGS = {
       'C#m': { label:'C♯m', bass:49, gtr:[49,56], keys:[64,68,73] }
     },
     templates:{
-      intro:  { name:'Intro',       bars:4, chords:['A','B','A','B'],                     drums:0,     bass:0, guitar:0,      keys:'arp',    fx:'sparkle' },
-      verse:  { name:'Verse',       bars:8, chords:['A','B','A','B','A','B','A','B'],     drums:1,     bass:1, guitar:'chug', keys:'stab',   fx:0 },
-      chorus: { name:'Chorus',      bars:8, chords:['A','B','A','B','A','B','A','B'],     drums:2,     bass:1, guitar:'open', keys:'stabarp',fx:'swell' },
-      lift:   { name:'Chorus Lift', bars:8, chords:['C#m','A','B','B','C#m','A','B','B'], drums:2,     bass:1, guitar:'open', keys:'stabarp',fx:'swell' },
-      bridge: { name:'Bridge',      bars:8, chords:['A','B','A','B','A','B','A','B'],     drums:'half',bass:1, guitar:'chug', keys:'sparse', fx:0 },
-      outro:  { name:'Outro',       bars:4, chords:['C#m','A','B','B'],                   drums:'out', bass:1, guitar:0,      keys:'tick',   fx:'tail' }
+      intro:  { name:'Intro',       bars:4, chords:['A','B','A','B'],                     drums:0,     bass:0, guitar:0,      keys:'riffsoft', fx:'sparkle' },
+      verse:  { name:'Verse',       bars:8, chords:['A','B','A','B','A','B','A','B'],     drums:4,     bass:1, guitar:0,      keys:'riff',   fx:0 },
+      chorus: { name:'Chorus',      bars:8, chords:['A','B','A','B','A','B','A','B'],     drums:5,     bass:1, guitar:'funk', keys:'riff',   fx:'swell' },
+      lift:   { name:'Chorus Lift', bars:8, chords:['C#m','A','B','B','C#m','A','B','B'], drums:5,     bass:1, guitar:'funk', keys:'riff',   fx:'swell' },
+      bridge: { name:'Bridge',      bars:8, chords:['A','B','A','B','A','B','A','B'],     drums:4,     bass:1, guitar:0,      keys:'riffsoft', fx:0 },
+      outro:  { name:'Outro',       bars:4, chords:['C#m','A','B','B'],                   drums:'out', bass:1, guitar:0,      keys:'riffsoft', fx:'tail' }
     },
     defArrangement:['intro','verse','chorus','lift','outro'],
     stems:[
-      { id:'drums',  icon:'🥁', name:'Drums',   sub:'the big insistent beat',   vol:0.9,  color:'#B26E4B' },
+      { id:'drums',  icon:'🥁', name:'Drums',   sub:'driving 8ths · offbeat hats', vol:0.9,  color:'#B26E4B' },
       { id:'bass',   icon:'🎸', name:'Bass',    sub:'driving 8th-note roots',   vol:0.8,  color:'#7D8471' },
-      { id:'guitar', icon:'🎵', name:'Guitar',  sub:'palm-muted chugs → funk',  vol:0.8,  color:'#C09544' },
-      { id:'keys',   icon:'🎹', name:'Keys',    sub:'stabs + harp arpeggios',   vol:0.9,  color:'#8F7355' },
+      { id:'guitar', icon:'🎵', name:'Guitar',  sub:'funk chops, choruses only', vol:0.8,  color:'#C09544' },
+      { id:'keys',   icon:'🎹', name:'Piano',   sub:'the staccato piano riff',   vol:0.9,  color:'#8F7355' },
       { id:'fx',     icon:'✨', name:'Effects', sub:'sparkle · builds · swells', vol:0.8, color:'#77828C' }
     ]
   },
@@ -355,7 +355,7 @@ const mf = m => 440*Math.pow(2,(m-69)/12);
 function chordOf(name){ return (CUR.chords && CUR.chords[name]) || CHORD_LIB[name]; }
 
 /* ================= audio engine ================= */
-let ctx=null, master, recDest, noiseBuf;
+let ctx=null, master, recDest, noiseBuf, pianoWave=null;
 const stemGain = {}, stemState = {};
 const ALL_STEMS = ['drums','bass','guitar','keys','fx','beats'];
 const DEF_VOL = { drums:0.9, bass:0.8, guitar:0.8, keys:0.9, fx:0.8, beats:0.9 };
@@ -383,6 +383,9 @@ function makeAudio(){
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate*2, ctx.sampleRate);
   const d = noiseBuf.getChannelData(0);
   for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+  pianoWave = ctx.createPeriodicWave(
+    new Float32Array([0,0,0,0,0,0,0,0]),
+    new Float32Array([0, 1, 0.55, 0.30, 0.17, 0.09, 0.05, 0.025]));
 }
 function out(id){ return stemGain[id]; }
 
@@ -456,18 +459,33 @@ function gtrOpen(chKey, t, accent){
 }
 /* ---- keys ---- */
 function keyTone(m, t, vel, dur){
-  const g = ctx.createGain();
-  g.gain.setValueAtTime(0.0001, t);
-  g.gain.exponentialRampToValueAtTime(vel, t+0.007);
-  g.gain.exponentialRampToValueAtTime(0.0008, t+(dur||0.5));
-  const o1 = ctx.createOscillator(); o1.type='triangle'; o1.frequency.value = mf(m);
-  const o2 = ctx.createOscillator(); o2.type='sine'; o2.frequency.value = mf(m)*2;
-  const g2 = ctx.createGain(); g2.gain.value = 0.3;
-  o1.connect(g); o2.connect(g2); g2.connect(g); g.connect(out('keys'));
-  o1.start(t); o2.start(t); o1.stop(t+(dur||0.5)+0.05); o2.stop(t+(dur||0.5)+0.05);
+  // classic piano: three slightly-detuned harmonic strings + hammer noise,
+  // brightness follows velocity, long natural decay
+  dur = dur || 0.6;
+  const dest = out('keys');
+  const tail = Math.max(0.45, dur*1.9);
+  const hn = ctx.createBufferSource(); hn.buffer = noiseBuf;
+  const hf = ctx.createBiquadFilter(); hf.type='bandpass'; hf.frequency.value = 1500 + vel*1600; hf.Q.value = 0.8;
+  const hg = ctx.createGain();
+  hg.gain.setValueAtTime(vel*0.22, t); hg.gain.exponentialRampToValueAtTime(0.001, t+0.03);
+  hn.connect(hf); hf.connect(hg); hg.connect(dest); hn.start(t); hn.stop(t+0.05);
+  [-2.5, 0, 2.5].forEach(cents => {
+    const o = ctx.createOscillator();
+    if (pianoWave) o.setPeriodicWave(pianoWave); else o.type = 'triangle';
+    o.frequency.value = mf(m); o.detune.value = cents;
+    const f = ctx.createBiquadFilter(); f.type='lowpass'; f.Q.value = 0.3;
+    f.frequency.value = 900 + vel*3600 + Math.max(0,(m-60))*24;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vel*0.36, t+0.004);
+    g.gain.exponentialRampToValueAtTime(vel*0.13, t+0.26);
+    g.gain.exponentialRampToValueAtTime(0.0008, t+tail);
+    o.connect(f); f.connect(g); g.connect(dest);
+    o.start(t); o.stop(t+tail+0.05);
+  });
 }
 function keysStab(chKey, t, accent, scale){
-  const ch = chordOf(chKey), v = (accent?0.26:0.20) * (scale||1);
+  const ch = chordOf(chKey), v = (accent?0.23:0.18) * (scale||1);
   keyTone(ch.bass+12, t, v*0.7, 0.4);
   ch.keys.forEach(m => keyTone(m, t, v, 0.45));
 }
@@ -475,6 +493,19 @@ function keysArp(chKey, step, t, soft){
   const ch = chordOf(chKey);
   const seq = [ch.keys[0], ch.keys[1], ch.keys[2], ch.keys[1]+12];
   keyTone(seq[step%4], t, soft?0.10:0.13, 0.3);
+}
+const RIFF_PAT = [1.0, 0.55, 0.82, 0.6, 0.95, 0.55, 0.82, 0.66];
+function riffStab(chKey, s, t, base){
+  const ch = chordOf(chKey), sc = RIFF_PAT[s] * base;
+  keyTone(ch.bass+12, t, 0.19*sc, 0.4);
+  ch.keys.forEach(m => keyTone(m, t, 0.29*sc, 0.42));
+  if (RIFF_PAT[s] > 0.9) keyTone(ch.keys[2]+12, t, 0.09*sc, 0.3);
+}
+function funkChop(chKey, t, big){
+  const ch = chordOf(chKey);
+  gtrTone(ch.gtr[0]+12, t, big?0.20:0.15, 3400, 0.09);
+  gtrTone(ch.gtr[1]+12, t, big?0.15:0.11, 3400, 0.07);
+  if (big) gtrTone(ch.gtr[0], t, 0.14, 2600, 0.12);
 }
 /* ---- effects ---- */
 function chime(m, t){
@@ -580,6 +611,14 @@ function scheduleStepSounds(bo, s, t){
     if (s===2||s===6) snare(t, 0.20);
     if (s%2===1) hat(t, 0.12, true);
     else hat(t, 0.05, false);
+  } else if (dm===4 || dm===5){
+    // the record's groove: kick drives every 8th (accents on 1 & 3),
+    // big snare on 2 & 4, open hats on the offbeats, quiet on the beats
+    kick(t, (s===0||s===4) ? 0.66 : 0.48);
+    if (s===2||s===6) snare(t, 0.36);
+    if (s%2===1) hat(t, dm===5?0.15:0.13, true);
+    else hat(t, 0.04, false);
+    if (dm===5 && s===7) kick(t, 0.3);
   } else if (dm==='half'){
     if (s%2===0) kick(t, 0.5);
     if (s===6) snare(t, 0.25);
@@ -594,6 +633,9 @@ function scheduleStepSounds(bo, s, t){
     if (s===0||s===3||s===6) gtrOpen(chKey, t, s===0);
     if (s===7) gtrChug(chKey, t);
   }
+  if (tpl.guitar==='funk'){
+    if (s===0||s===3||s===6||s===7) funkChop(chKey, t, s===0);
+  }
   const km = tpl.keys;
   if (km==='stab'){ if (s===0||s===3||s===6) keysStab(chKey, t, s===0, 1); }
   if (km==='stab2'){ if (s===0||s===3||s===6) keysStab(chKey, t, s===0, 1); if (s===7) keysStab(chKey, t, false, 0.5); }
@@ -601,6 +643,8 @@ function scheduleStepSounds(bo, s, t){
   if (km==='arp'){ keysArp(chKey, s, t, true); if (s===0) keysStab(chKey, t, false, 1); }
   if (km==='sparse'){ if (s===0) keysStab(chKey, t, true, 1); }
   if (km==='tick'){ keyTone(s%2===0 ? ch.bass+24 : ch.keys[2], t, s%2===0?0.15:0.09, 0.12); }
+  if (km==='riff'){ riffStab(chKey, s, t, 1); }
+  if (km==='riffsoft'){ riffStab(chKey, s, t, 0.58); }
 }
 function scheduleBar(bo, t0){
   for (let s=0;s<8;s++) scheduleStepSounds(bo, s, t0 + s*STEP);
