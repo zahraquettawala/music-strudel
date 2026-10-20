@@ -8,12 +8,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#54424e; --ink2:#97828d; --card:#fffefe; --line:#eedde5;
-    --rose:#d77ca5; --rose-deep:#bf6391; --lav:#a893d6; --butter:#e3b959;
+    --ink:#392D2B; --ink2:#857A6C; --card:#fffefe; --line:#E3D8C4;
+    --rose:#A98F6F; --rose-deep:#77644A; --lav:#8C7B5D; --butter:#C2A164;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   body{margin:0; color:var(--ink); font-family:Inter,-apple-system,sans-serif; font-weight:500;
-    background:linear-gradient(165deg,#fbf0ee 0%,#f6f0f9 55%,#eef3f7 100%);
+    background:linear-gradient(165deg,#F7F2EA 0%,#F2EBDD 55%,#ECE0D0 100%);
     background-attachment:fixed; padding:26px 20px 56px;}
   .wrap{max-width:1180px; margin:0 auto;}
   header.top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px; padding:0 2px;}
@@ -24,11 +24,11 @@
   .pills{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
   .pills button{flex:1; min-width:170px; border:1.5px solid var(--line); background:rgba(255,255,255,.8); color:var(--ink);
     font-family:Inter,sans-serif; font-weight:600; font-size:14px; padding:11px 10px; border-radius:12px; cursor:pointer;}
-  .pills button.on{background:linear-gradient(135deg,#df93b6,#cd739c); color:#fff; border-color:transparent;
-    box-shadow:0 6px 16px rgba(205,115,156,.3);}
+  .pills button.on{background:linear-gradient(135deg,#3A332C,#241F1B); color:#fff; border-color:transparent;
+    box-shadow:0 6px 16px rgba(41,35,29,.3);}
   /* cards */
   .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:20px; margin-bottom:16px;
-    box-shadow:0 8px 22px rgba(160,110,135,.08);}
+    box-shadow:0 8px 22px rgba(90,78,64,.08);}
   .duo{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;}
   .duo .card{margin-bottom:0;}
   .label-caps{font-size:11.5px; letter-spacing:1.8px; text-transform:uppercase; color:var(--rose-deep); font-weight:700; margin-bottom:5px;}
@@ -38,14 +38,14 @@
   .player{display:flex; gap:24px; align-items:center;}
   .platter-wrap{position:relative; width:132px; height:132px; flex:0 0 auto;}
   .platter{position:absolute; inset:0; border-radius:50%; background:#fff;
-    box-shadow:0 8px 20px rgba(160,110,135,.18), inset 0 0 0 1.5px var(--line);}
+    box-shadow:0 8px 20px rgba(90,78,64,.18), inset 0 0 0 1.5px var(--line);}
   .disc{position:absolute; inset:7px; border-radius:50%;
-    background:repeating-radial-gradient(circle,#f3bcd2 0 2px,#eda9c4 2px 4px);
-    box-shadow:inset 0 0 0 2px rgba(255,255,255,.45), 0 3px 9px rgba(160,110,135,.25);
+    background:repeating-radial-gradient(circle,#1E1B18 0 2px,#2A2723 2px 4px);
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.45), 0 3px 9px rgba(90,78,64,.25);
     animation:spin 2.6s linear infinite; animation-play-state:paused;}
   .disc.spinning{animation-play-state:running;}
   @keyframes spin{to{transform:rotate(360deg);}}
-  .disc .sticker{position:absolute; inset:29%; border-radius:50%; background:#fffdf9;
+  .disc .sticker{position:absolute; inset:29%; border-radius:50%; background:#F7F1E3;
     display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; color:var(--rose-deep);
     font-weight:600; font-size:7.5px; line-height:1.3; padding:4px; box-shadow:inset 0 0 0 1.5px var(--line);}
   .disc .sticker small{font-size:5.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--ink2);}
@@ -55,18 +55,18 @@
   .tonearm{position:absolute; right:-5px; top:-3px; width:60px; height:60px; pointer-events:none; transform:rotate(-24deg); transform-origin:48px 11px; transition:transform 1.1s ease;}
   .tonearm.on{transform:rotate(7deg);}
   .tonearm .pivot{position:absolute; right:4px; top:4px; width:16px; height:16px; border-radius:50%;
-    background:radial-gradient(circle at 35% 35%,#ffe3ee,var(--rose) 65%,var(--rose-deep)); box-shadow:0 2px 4px rgba(160,110,135,.35);}
+    background:radial-gradient(circle at 35% 35%,#EFE7D3,var(--rose) 65%,var(--rose-deep)); box-shadow:0 2px 4px rgba(90,78,64,.35);}
   .tonearm .arm{position:absolute; right:11px; top:10px; width:4px; height:52px; border-radius:3px;
-    background:linear-gradient(90deg,#e2d8ee,#c2aede); transform:rotate(24deg); transform-origin:top center; box-shadow:1px 2px 3px rgba(140,100,125,.3);}
+    background:linear-gradient(90deg,#DCD4C4,#A79B85); transform:rotate(24deg); transform-origin:top center; box-shadow:1px 2px 3px rgba(140,100,125,.3);}
   .pinfo{flex:1; min-width:0;}
   .player h1{font-family:Fraunces,serif; font-weight:600; font-size:29px; margin:0 0 3px; color:var(--ink);}
-  .player .byline{font-size:13.5px; color:var(--ink2); margin-bottom:9px;}
-  .player .meta{display:inline-block; font-size:10.5px; letter-spacing:1.2px; text-transform:uppercase; background:#fdf6f9;
+  .player .byline{font-family:Fraunces,serif; font-style:italic; font-size:15.5px; color:var(--ink2); margin-bottom:9px;}
+  .player .meta{display:inline-block; font-size:10.5px; letter-spacing:1.2px; text-transform:uppercase; background:#FAF5EB;
     padding:5px 11px; border-radius:999px; border:1px solid var(--line); color:var(--ink2); margin-bottom:13px;}
   #playBtn{display:inline-block; min-width:200px; font-family:Inter,sans-serif; font-size:15.5px; font-weight:700; padding:12px 26px; border:none; border-radius:999px;
-    background:linear-gradient(135deg,#df93b6,#cd739c); color:#fff; cursor:pointer; box-shadow:0 6px 16px rgba(205,115,156,.35);}
+    background:linear-gradient(135deg,#3A332C,#241F1B); color:#fff; cursor:pointer; box-shadow:0 6px 16px rgba(41,35,29,.35);}
   #playBtn:active{transform:scale(.985);}
-  #playBtn.playing{background:linear-gradient(135deg,#b3a0da,#9783c9); box-shadow:0 6px 16px rgba(151,131,201,.35);}
+  #playBtn.playing{background:linear-gradient(135deg,#B49B78,#9A7F5C); box-shadow:0 6px 16px rgba(151,131,201,.35);}
   .nowline{margin-top:11px; font-size:13.5px; color:var(--ink2); min-height:19px;}
   .nowline b{color:var(--rose-deep);}
   /* sections ruler — one aligned row */
@@ -74,18 +74,18 @@
   .rspacer{width:170px; flex:0 0 auto;}
   .blocks{flex:1; display:flex; gap:4px; padding:0 7px; min-width:0;}
   .blk{background:#fff; border:1.5px solid var(--line); border-radius:12px; padding:7px 8px; min-width:0; overflow:hidden;}
-  .blk.on{border-color:var(--rose-deep); background:#fdf1f6;}
+  .blk.on{border-color:var(--rose-deep); background:#F3EDE0;}
   .blk .t{font-weight:700; font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .blk .s{font-size:9.5px; color:var(--ink2); margin-bottom:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .blk .row{display:flex; gap:3px;}
-  .blk button{flex:1; border:1px solid var(--line); background:#fffdf9; border-radius:6px; font-size:11px; padding:2px 0; cursor:pointer; color:var(--ink); font-family:Inter,sans-serif;}
+  .blk button{flex:1; border:1px solid var(--line); background:#F7F1E3; border-radius:6px; font-size:11px; padding:2px 0; cursor:pointer; color:var(--ink); font-family:Inter,sans-serif;}
   .blk button:active{background:var(--rose); color:#fff;}
   .addrow{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;}
-  .addrow button{border:1.5px dashed #dfb6c9; background:transparent; color:var(--ink2); border-radius:999px; padding:6px 12px; font-size:12.5px; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;}
-  .addrow button:active{background:#fdf1f6;}
+  .addrow button{border:1.5px dashed #C7B299; background:transparent; color:var(--ink2); border-radius:999px; padding:6px 12px; font-size:12.5px; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;}
+  .addrow button:active{background:#F3EDE0;}
   /* DAW tracks */
   .track{display:flex; gap:10px; margin-bottom:8px; align-items:stretch;}
-  .thead{width:170px; flex:0 0 auto; border-radius:12px; padding:9px 10px; background:#fdf8fa; border:1.5px solid var(--line);}
+  .thead{width:170px; flex:0 0 auto; border-radius:12px; padding:9px 10px; background:#FAF6EE; border:1.5px solid var(--line);}
   .thead .tnm{font-weight:700; font-size:13.5px; display:flex; align-items:center; gap:6px;}
   .thead .tnm .dot{width:10px; height:10px; border-radius:50%; flex:0 0 auto;}
   .thead .tsub{font-size:10.5px; color:var(--ink2); margin:2px 0 7px; line-height:1.3;}
@@ -95,14 +95,14 @@
   .msbtn.m-on{background:#e9e2dd; color:#8a7a6d; border-color:#cfc4b8;}
   .msbtn.s-on{background:var(--butter); color:#7a5410; border-color:#d9ae4e;}
   input[type=range]{flex:1; appearance:none; -webkit-appearance:none; height:7px; border-radius:99px; min-width:40px;
-    background:linear-gradient(90deg,#f0c3d8,#ddd2f2); outline:none;}
+    background:linear-gradient(90deg,#DCC7A6,#B3A184); outline:none;}
   input[type=range]::-webkit-slider-thumb{appearance:none; -webkit-appearance:none; width:19px; height:19px; border-radius:50%;
-    background:#fff; border:2px solid var(--rose-deep); box-shadow:0 2px 5px rgba(160,110,135,.3); cursor:pointer;}
+    background:#fff; border:2px solid var(--rose-deep); box-shadow:0 2px 5px rgba(90,78,64,.3); cursor:pointer;}
   input[type=range]::-moz-range-thumb{width:19px; height:19px; border-radius:50%; background:#fff; border:2px solid var(--rose-deep); cursor:pointer;}
-  .tlane{flex:1; display:flex; gap:4px; background:#fdf8fa; border:1.5px solid var(--line); border-radius:12px; padding:5px; min-width:0; overflow:hidden;}
+  .tlane{flex:1; display:flex; gap:4px; background:#FAF6EE; border:1.5px solid var(--line); border-radius:12px; padding:5px; min-width:0; overflow:hidden;}
   .clip{border-radius:8px; color:#fff; font-size:9.5px; font-weight:600; padding:5px 6px; overflow:hidden; white-space:nowrap;
-    display:flex; align-items:center; min-width:0; text-shadow:0 1px 2px rgba(110,50,75,.22);}
-  .clip.empty{background:transparent !important; border:1.5px dashed #ecc9da; color:transparent; text-shadow:none;}
+    display:flex; align-items:center; min-width:0; text-shadow:0 1px 2px rgba(57,45,43,.22);}
+  .clip.empty{background:transparent !important; border:1.5px dashed #DCD0B8; color:transparent; text-shadow:none;}
   .clip.on{outline:2.5px solid var(--rose-deep); outline-offset:-1px;}
   /* generic controls */
   select{font-family:Inter,sans-serif; font-size:14px; font-weight:600; color:var(--ink);
@@ -111,14 +111,14 @@
   .ctl-row label{font-size:11.5px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--ink2);}
   .btn2{border:1.5px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 14px;
     font-size:13px; font-weight:600; cursor:pointer; font-family:Inter,sans-serif;}
-  .btn2:active{background:#fdf1f6;}
+  .btn2:active{background:#F3EDE0;}
   .btn2.rec{background:var(--rose-deep); color:#fff; border-color:var(--rose-deep);}
   /* beat grid */
   .grid-wrap{overflow-x:auto; padding-bottom:4px;}
   .brow{display:flex; align-items:center; gap:4px; margin-bottom:4px;}
   .brow .bl{width:52px; font-size:11.5px; font-weight:700; text-align:right; padding-right:6px; flex:0 0 auto; color:var(--ink2);}
   .cell{width:26px; height:26px; flex:0 0 auto; border-radius:8px; border:1.5px solid var(--line); background:#fff; cursor:pointer; padding:0;}
-  .cell.beat{border-color:#e3aec6;}
+  .cell.beat{border-color:#C7B299;}
   .cell.on{background:var(--rose-deep); border-color:var(--rose-deep);}
   /* takes */
   .take{display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1.5px dashed var(--line); flex-wrap:wrap;}
@@ -129,11 +129,11 @@
   .take button{border:1.5px solid var(--line); background:#fff; border-radius:8px; cursor:pointer; padding:4px 8px; font-family:Inter,sans-serif;}
   /* piano */
   .piano{position:relative; display:flex; height:150px; user-select:none; touch-action:none; border-radius:14px; overflow:hidden; border:1.5px solid var(--line);}
-  .wk{flex:1; background:linear-gradient(180deg,#fffdf9,#fdf0f5); border-right:1px solid #f3d9e5; position:relative; cursor:pointer;}
+  .wk{flex:1; background:linear-gradient(180deg,#F7F1E3,#F7F1E4); border-right:1px solid #E7DCC8; position:relative; cursor:pointer;}
   .wk:last-child{border-right:none;}
-  .wk .lbl{position:absolute; bottom:5px; left:0; right:0; text-align:center; font-size:9.5px; color:#cf9fb6; pointer-events:none;}
-  .bk{position:absolute; top:0; width:58%; height:57%; background:linear-gradient(180deg,#7d5468,#53344a); left:71%; z-index:2; border-radius:0 0 5px 5px; cursor:pointer;}
-  .wk.hit{background:#f6cfdf;} .bk.hit{background:var(--rose);}
+  .wk .lbl{position:absolute; bottom:5px; left:0; right:0; text-align:center; font-size:9.5px; color:#A99B83; pointer-events:none;}
+  .bk{position:absolute; top:0; width:58%; height:57%; background:linear-gradient(180deg,#463C33,#2A2320); left:71%; z-index:2; border-radius:0 0 5px 5px; cursor:pointer;}
+  .wk.hit{background:#E9DBC0;} .bk.hit{background:var(--rose);}
   .wk.lit{background:var(--rose);} .bk.lit{background:var(--rose-deep);}
   .foot{margin-top:16px; text-align:center; color:var(--ink2); font-size:12.5px;}
   .foot a{color:var(--rose-deep);}
@@ -270,7 +270,7 @@ const SONGS = {
   liiwmi: {
     title:'Love It If We Made It', byline:'The 1975 · A Brief Inquiry Into Online Relationships',
     meta:'Key E major · 90 BPM · chords verified from the official tab', bpm:90,
-    sticker:'<small>The 1975</small><span class="heart">♡</span>Love It If<br>We Made It<small>33⅓ · Side A</small>',
+    sticker:'<small>The 1975</small>Love It If<br>We Made It<small>33⅓ · Side A</small>',
     hint:'Chords in this song: A (Asus2) · B · C♯m — the lift goes C♯m → A → B.',
     chords:{
       'A':   { label:'A',   bass:45, gtr:[45,52], keys:[64,69,71] },
@@ -287,17 +287,17 @@ const SONGS = {
     },
     defArrangement:['intro','verse','chorus','lift','outro'],
     stems:[
-      { id:'drums',  icon:'🥁', name:'Drums',   sub:'the big insistent beat',   vol:0.9,  color:'#dd8fb4' },
-      { id:'bass',   icon:'🎸', name:'Bass',    sub:'driving 8th-note roots',   vol:0.8,  color:'#ab97d8' },
-      { id:'guitar', icon:'🎵', name:'Guitar',  sub:'palm-muted chugs → funk',  vol:0.8,  color:'#e5a06b' },
-      { id:'keys',   icon:'🎹', name:'Keys',    sub:'stabs + harp arpeggios',   vol:0.9,  color:'#dfb34e' },
-      { id:'fx',     icon:'✨', name:'Effects', sub:'sparkle · builds · swells', vol:0.8, color:'#84b4de' }
+      { id:'drums',  icon:'🥁', name:'Drums',   sub:'the big insistent beat',   vol:0.9,  color:'#B26E4B' },
+      { id:'bass',   icon:'🎸', name:'Bass',    sub:'driving 8th-note roots',   vol:0.8,  color:'#7D8471' },
+      { id:'guitar', icon:'🎵', name:'Guitar',  sub:'palm-muted chugs → funk',  vol:0.8,  color:'#C09544' },
+      { id:'keys',   icon:'🎹', name:'Keys',    sub:'stabs + harp arpeggios',   vol:0.9,  color:'#8F7355' },
+      { id:'fx',     icon:'✨', name:'Effects', sub:'sparkle · builds · swells', vol:0.8, color:'#77828C' }
     ]
   },
   dbi: {
     title:"DON'T BELIEVE IT", byline:'John Summit & Absolutely · CTRL ESCAPE',
     meta:'Key C minor · 128 BPM · chords verified via Chordify + Beatport', bpm:128,
-    sticker:'<small>John Summit</small><span class="heart">♡</span>DON’T<br>BELIEVE IT<small>128 BPM · House</small>',
+    sticker:'<small>John Summit</small>DON’T<br>BELIEVE IT<small>128 BPM · House</small>',
     hint:'Chords in this song: A♭ · B♭ · Cm — with E♭ and F as variation bars. Stabs land on beat 1, the “and” of 2, and beat 4.',
     chords:{
       'Ab': { label:'A♭', bass:56, gtr:[56,63], keys:[60,63,68] },
@@ -311,25 +311,25 @@ const SONGS = {
     },
     defArrangement:['loop'],
     stems:[
-      { id:'drums', icon:'🥁', name:'Drums', sub:'four on the floor',       vol:0.9,  color:'#dd8fb4' },
-      { id:'bass',  icon:'🎸', name:'Bass',  sub:'sidechain pump',          vol:0.85, color:'#ab97d8' },
-      { id:'keys',  icon:'🎹', name:'Piano', sub:'syncopated stabs',        vol:0.9,  color:'#dfb34e' },
-      { id:'fx',    icon:'✨', name:'Effects', sub:'riser · crash · space', vol:0.8,  color:'#84b4de' }
+      { id:'drums', icon:'🥁', name:'Drums', sub:'four on the floor',       vol:0.9,  color:'#B26E4B' },
+      { id:'bass',  icon:'🎸', name:'Bass',  sub:'sidechain pump',          vol:0.85, color:'#7D8471' },
+      { id:'keys',  icon:'🎹', name:'Piano', sub:'syncopated stabs',        vol:0.9,  color:'#8F7355' },
+      { id:'fx',    icon:'✨', name:'Effects', sub:'riser · crash · space', vol:0.8,  color:'#77828C' }
     ]
   },
   original: {
     title:'Your Original', byline:'an original session · written by you',
     meta:'Your loop · your chords · your tempo', bpm:100,
-    sticker:'<small>Original</small><span class="heart">♡</span>Your<br>Session<small>Side You</small>',
+    sticker:'<small>Original</small>Your<br>Session<small>Side You</small>',
     hint:'Pick chords above and play along — the pink keys follow your loop.',
     chords: CHORD_LIB,
     templates:{},
     defArrangement:['loop'],
     stems:[
-      { id:'drums',  icon:'🥁', name:'Drums',   sub:'style pattern',      vol:0.9,  color:'#dd8fb4' },
-      { id:'bass',   icon:'🎸', name:'Bass',    sub:'follows your roots', vol:0.8,  color:'#ab97d8' },
-      { id:'guitar', icon:'🎵', name:'Guitar',  sub:'strums + chugs',     vol:0.75, color:'#e5a06b' },
-      { id:'keys',   icon:'🎹', name:'Keys',    sub:'stabs + sparkle',    vol:0.9,  color:'#dfb34e' }
+      { id:'drums',  icon:'🥁', name:'Drums',   sub:'style pattern',      vol:0.9,  color:'#B26E4B' },
+      { id:'bass',   icon:'🎸', name:'Bass',    sub:'follows your roots', vol:0.8,  color:'#7D8471' },
+      { id:'guitar', icon:'🎵', name:'Guitar',  sub:'strums + chugs',     vol:0.75, color:'#C09544' },
+      { id:'keys',   icon:'🎹', name:'Keys',    sub:'stabs + sparkle',    vol:0.9,  color:'#8F7355' }
     ]
   }
 };
