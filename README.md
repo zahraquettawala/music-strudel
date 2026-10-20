@@ -2,12 +2,19 @@
 
 Zahra's piano practice + live-coding notebook.
 
-## ▶️ Playable prototype
+## ▶️ Playable prototypes
 
 **DON'T BELIEVE IT piano loop player** — served from this repo with GitHub Pages:
 https://zahraquettawala.github.io/music-strudel/
 
 Tap play to hear the loop, watch the chords light up on the piano, or mute the piano and practice over the drums + bass.
+
+**🎚️ Creator Studio — Love It If We Made It (The 1975):**
+https://zahraquettawala.github.io/music-strudel/studio/
+
+A wooden record-player studio: separated stems (drums / bass / guitar / keys / effects)
+with their own faders, plus an arrangement builder — reorder, duplicate and stack
+Intro / Verse / Chorus / Chorus Lift / Bridge / Outro blocks to make your own version.
 
 ## Contents
 
