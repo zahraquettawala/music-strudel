@@ -9,12 +9,17 @@ https://zahraquettawala.github.io/music-strudel/
 
 Tap play to hear the loop, watch the chords light up on the piano, or mute the piano and practice over the drums + bass.
 
-**🎚️ Creator Studio — Love It If We Made It (The 1975):**
+**🎚️ Creator Studio — one page, every record:**
 https://zahraquettawala.github.io/music-strudel/studio/
 
-A wooden record-player studio: separated stems (drums / bass / guitar / keys / effects)
-with their own faders, plus an arrangement builder — reorder, duplicate and stack
-Intro / Verse / Chorus / Chorus Lift / Bridge / Outro blocks to make your own version.
+A wooden record-player studio with a **song switcher** (Love It If We Made It,
+DON'T BELIEVE IT, and a Create Original mode). Every song has separated stems
+(drums / bass / guitar / keys / effects) with their own faders, an arrangement
+builder (reorder, duplicate and stack section blocks), a step-sequencer beat
+layer you can add on top of any song, and a vocal booth: plug in a mic, sing
+over the track and record takes (captured in the browser, never uploaded).
+Create Original lets you pick a tempo, four chords and a style and generates
+a loop of your own.
 
 ## Contents
 
