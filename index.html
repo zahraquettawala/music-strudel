@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>DON'T BELIEVE IT — Piano Loop Player</title>
+<style>
+  :root{
+    --bg:#0d0d12; --panel:#17171f; --panel2:#1f1f2a; --text:#f2f0ea; --muted:#9a97a8;
+    --accent:#ffb03a; --accent2:#ff5e7a; --key-w:#f5f2ea; --key-b:#17171c;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; padding:18px 14px 40px;}
+  .wrap{max-width:640px; margin:0 auto;}
+  h1{font-size:26px; margin:4px 0 2px; letter-spacing:.5px;}
+  .sub{color:var(--muted); font-size:14px; margin-bottom:16px;}
+  .sub b{color:var(--accent);}
+  .now{background:var(--panel); border-radius:16px; padding:16px; text-align:center; margin-bottom:14px;}
+  .now .chord{font-size:56px; font-weight:800; line-height:1; color:var(--accent);}
+  .now .bar{color:var(--muted); font-size:13px; margin-top:6px; letter-spacing:1px; text-transform:uppercase;}
+  .prog{display:flex; gap:6px; margin-bottom:16px;}
+  .prog div{flex:1; text-align:center; padding:9px 0; background:var(--panel); border-radius:10px; font-weight:700; font-size:15px; color:var(--muted); transition:all .12s;}
+  .prog div.on{background:var(--accent); color:#191204; transform:translateY(-2px);}
+  .transport{display:flex; gap:10px; margin-bottom:16px;}
+  #playBtn{flex:1; font-size:20px; font-weight:800; padding:16px; border:none; border-radius:14px; background:var(--accent); color:#191204; cursor:pointer;}
+  #playBtn.playing{background:var(--accent2); color:#fff;}
+  .toggles{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+  .tog{flex:1; min-width:100px; padding:11px 6px; border-radius:11px; border:1px solid #33333f; background:var(--panel2); color:var(--text); font-size:13.5px; font-weight:600; cursor:pointer;}
+  .tog.off{opacity:.38;}
+  .tog small{display:block; font-weight:400; color:var(--muted); font-size:11px; margin-top:2px;}
+  .section-label{font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin:18px 0 8px;}
+  /* piano */
+  .piano{position:relative; display:flex; height:170px; user-select:none; touch-action:none; border-radius:0 0 12px 12px; overflow:hidden;}
+  .wk{flex:1; background:var(--key-w); border-right:1px solid #c9c4b4; position:relative; cursor:pointer;}
+  .wk:last-child{border-right:none;}
+  .wk .lbl{position:absolute; bottom:6px; left:0; right:0; text-align:center; font-size:10px; color:#8a8578; pointer-events:none;}
+  .bk{position:absolute; top:0; width:58%; height:58%; background:var(--key-b); left:71%; z-index:2; border-radius:0 0 5px 5px; cursor:pointer;}
+  .wk.hit{background:#ffe1ad;}
+  .bk.hit{background:var(--accent);}
+  .wk.lit{background:var(--accent);}
+  .bk.lit{background:var(--accent2);}
+  /* chord pads */
+  .pads{display:flex; gap:8px;}
+  .pad{flex:1; padding:15px 0; font-size:19px; font-weight:800; text-align:center; background:var(--panel2); border:1px solid #33333f; border-radius:12px; cursor:pointer; color:var(--text);}
+  .pad:active{background:var(--accent); color:#191204;}
+  .hint{color:var(--muted); font-size:13px; line-height:1.55; margin-top:14px;}
+  .links{margin-top:22px; font-size:13.5px;}
+  .links a{color:var(--accent); text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>DON'T BELIEVE IT 🎹</h1>
+  <div class="sub">John Summit &amp; Absolutely · key <b>C minor</b> · <b>128 BPM</b> · loop: <b>A♭ → B♭ → Cm</b> with E♭ / F variation bars</div>
+
+  <div class="now">
+    <div class="chord" id="nowChord">—</div>
+    <div class="bar" id="nowBar">press play</div>
+  </div>
+
+  <div class="prog" id="prog"></div>
+
+  <div class="transport">
+    <button id="playBtn">▶&nbsp; Play the loop</button>
+  </div>
+
+  <div class="toggles">
+    <button class="tog" id="togPiano">🎹 Piano<small>off = practice over the groove</small></button>
+    <button class="tog" id="togDrums">🥁 Drums + bass<small>kick, hats, bassline</small></button>
+    <button class="tog" id="togFx">✨ Effects<small>riser + crash each cycle</small></button>
+  </div>
+
+  <div class="section-label">Piano — tap the keys to play</div>
+  <div class="piano" id="piano"></div>
+
+  <div class="section-label">Chord stabs — tap to hear a chord</div>
+  <div class="pads" id="pads"></div>
+
+  <p class="hint">How to practice: hit play, watch the chord names light up, and stab along on the off-beats (beat 1, the "and" of 2, beat 4). When you're ready, turn the piano off above and play the real chords yourself over the drums + bass. The riser bar is where the record drops the drums out before the variation.</p>
+
+  <div class="links">
+    📄 <a href="https://github.com/zahraquettawala/music-strudel/blob/main/chords/dont-believe-it.md">Chord sheet + voicings</a><br>
+    🎛️ <a href="https://github.com/zahraquettawala/music-strudel/blob/main/strudel/dont-believe-it.js">This loop in Strudel (with effects)</a>
+  </div>
+</div>
+
+<script>
+"use strict";
+const CHORDS = {
+  'Ab': { label:'A♭', root:44, notes:[56,60,63], extra:67 },
+  'Bb': { label:'B♭', root:46, notes:[58,62,65] },
+  'Cm': { label:'Cm', root:48, notes:[60,63,67] },
+  'Eb': { label:'E♭', root:39, notes:[63,67,70] },
+  'F':  { label:'F',  root:41, notes:[65,69,72] }
+};
+const PROG  = ['Ab','Bb','Cm','Cm','Eb','Bb','Cm','F'];   // 8 bars
+const STABS = [0,2,3,5];                                   // 8th-note steps inside a bar
+const BPM = 128, STEP = 60/BPM/2, BAR = STEP*8;
+
+let ctx=null, pianoBus, delaySend, verbSend, master;
+let noiseBuf=null;
+function makeAudio(){
+  ctx = new (window.AudioContext||window.webkitAudioContext)();
+  master = ctx.createGain(); master.gain.value = 0.9; master.connect(ctx.destination);
+  pianoBus = ctx.createGain(); pianoBus.gain.value = 1.0; pianoBus.connect(master);
+  // dotted-8th delay
+  const delay = ctx.createDelay(1); delay.delayTime.value = 0.352;
+  const fb = ctx.createGain(); fb.gain.value = 0.34;
+  const wet = ctx.createGain(); wet.gain.value = 0.25;
+  delaySend = ctx.createGain(); delaySend.gain.value = 1;
+  delaySend.connect(delay); delay.connect(fb); fb.connect(delay); delay.connect(wet); wet.connect(master);
+  // simple generated reverb
+  const conv = ctx.createConvolver(); conv.buffer = impulse(1.8, 2.6);
+  const rwet = ctx.createGain(); rwet.gain.value = 0.16;
+  verbSend = ctx.createGain(); verbSend.gain.value = 1;
+  verbSend.connect(conv); conv.connect(rwet); rwet.connect(master);
+  // noise buffer
+  noiseBuf = ctx.createBuffer(1, ctx.sampleRate*2, ctx.sampleRate);
+  const d = noiseBuf.getChannelData(0);
+  for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1;
+}
+function impulse(dur, decay){
+  const rate = ctx.sampleRate, len = rate*dur;
+  const buf = ctx.createBuffer(2, len, rate);
+  for (let c=0;c<2;c++){ const ch = buf.getChannelData(c);
+    for (let i=0;i<len;i++) ch[i] = (Math.random()*2-1)*Math.pow(1-i/len, decay); }
+  return buf;
+}
+const mf = m => 440*Math.pow(2,(m-69)/12);
+
+function pianoNote(m, t, vel){
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vel, t+0.006);
+  g.gain.exponentialRampToValueAtTime(0.0008, t+0.55);
+  const o1 = ctx.createOscillator(); o1.type='triangle'; o1.frequency.value = mf(m);
+  const o2 = ctx.createOscillator(); o2.type='sine'; o2.frequency.value = mf(m)*2;
+  const g2 = ctx.createGain(); g2.gain.value = 0.35;
+  o1.connect(g); o2.connect(g2); g2.connect(g);
+  g.connect(pianoBus); g.connect(delaySend); g.connect(verbSend);
+  o1.start(t); o2.start(t); o1.stop(t+0.6); o2.stop(t+0.6);
+}
+function stab(chKey, t, accent){
+  const ch = CHORDS[chKey], v = accent?0.30:0.24;
+  pianoNote(ch.root, t, v*0.75);
+  ch.notes.forEach(m => pianoNote(m, t, v));
+  flashKeys(ch.notes.concat([ch.root]), 260);
+}
+function kick(t){
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.frequency.setValueAtTime(120, t);
+  o.frequency.exponentialRampToValueAtTime(45, t+0.10);
+  g.gain.setValueAtTime(0.55, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t+0.16);
+  o.connect(g); g.connect(master); o.start(t); o.stop(t+0.2);
+}
+function hat(t){
+  const s = ctx.createBufferSource(); s.buffer = noiseBuf;
+  const f = ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value = 7000;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.10, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t+0.045);
+  s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t+0.06);
+}
+function bassNote(m, t){
+  const o = ctx.createOscillator(); o.type='sawtooth'; o.frequency.value = mf(m-12);
+  const f = ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value = 480;
+  const g = ctx.createGain();
+  // sidechain-style pump: dip, then swell
+  g.gain.setValueAtTime(0.05, t);
+  g.gain.linearRampToValueAtTime(0.20, t+0.09);
+  g.gain.setValueAtTime(0.20, t+STEP*2-0.05);
+  g.gain.linearRampToValueAtTime(0.001, t+STEP*2);
+  o.connect(f); f.connect(g); g.connect(master); o.start(t); o.stop(t+STEP*2);
+}
+function riser(t){
+  const s = ctx.createBufferSource(); s.buffer = noiseBuf; s.loop = true;
+  const f = ctx.createBiquadFilter(); f.type='lowpass';
+  f.frequency.setValueAtTime(300, t);
+  f.frequency.exponentialRampToValueAtTime(12000, t+BAR);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.001, t);
+  g.gain.exponentialRampToValueAtTime(0.13, t+BAR);
+  s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t+BAR+0.05);
+}
+function crash(t){
+  const s = ctx.createBufferSource(); s.buffer = noiseBuf;
+  const f = ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value = 5000;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.20, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t+1.4);
+  s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t+1.5);
+  const o = ctx.createOscillator(), og = ctx.createGain();
+  o.frequency.value = 58;
+  og.gain.setValueAtTime(0.22, t);
+  og.gain.exponentialRampToValueAtTime(0.001, t+0.3);
+  o.connect(og); og.connect(master); o.start(t); o.stop(t+0.35);
+}
+
+/* ---------- transport ---------- */
+let playing=false, stepIdx=0, nextTime=0, timer=null, uiTimers=[];
+let onPiano=true, onDrums=true, onFx=true;
+
+function scheduleStep(idx, t){
+  const bar = Math.floor(idx/8)%8, s = idx%8, key = PROG[bar], ch = CHORDS[key];
+  const isRiserBar = (bar===7);
+  if (s===0){
+    const delayMs = Math.max(0,(t-ctx.currentTime)*1000);
+    uiTimers.push(setTimeout(()=>showBar(bar, key), delayMs));
+  }
+  if (isRiserBar){
+    if (onFx) riser(t);
+    if (onPiano && s===0) stab(key, t, true);
+    return;
+  }
+  if (onDrums && s%2===0){ kick(t); bassNote(ch.root, t); }
+  if (onDrums && s%2===1) hat(t);
+  if (onFx && bar===0 && s===0) crash(t);
+  if (onPiano && STABS.includes(s)){
+    stab(key, t, s===0);
+    if (key==='Ab' && s===5) pianoNote(ch.extra, t, 0.22);  // Abmaj7 sparkle
+  }
+}
+function tick(){
+  while (nextTime < ctx.currentTime + 0.12){
+    scheduleStep(stepIdx, nextTime);
+    nextTime += STEP; stepIdx++;
+  }
+}
+const playBtn = document.getElementById('playBtn');
+playBtn.addEventListener('click', async () => {
+  if (!ctx) makeAudio();
+  await ctx.resume();
+  if (!playing){
+    playing = true; stepIdx = 0; nextTime = ctx.currentTime + 0.06;
+    timer = setInterval(tick, 25);
+    playBtn.textContent = '⏹  Stop'; playBtn.classList.add('playing');
+  } else {
+    playing = false; clearInterval(timer);
+    uiTimers.forEach(clearTimeout); uiTimers = [];
+    playBtn.innerHTML = '▶&nbsp; Play the loop'; playBtn.classList.remove('playing');
+    document.getElementById('nowChord').textContent = '—';
+    document.getElementById('nowBar').textContent = 'press play';
+    document.querySelectorAll('.prog div').forEach(d=>d.classList.remove('on'));
+    clearLit();
+  }
+});
+function showBar(bar, key){
+  document.getElementById('nowChord').textContent = CHORDS[key].label;
+  document.getElementById('nowBar').textContent = 'bar ' + (bar+1) + ' of 8' + (bar===7 ? ' · riser' : '');
+  document.querySelectorAll('.prog div').forEach((d,i)=>d.classList.toggle('on', i===bar));
+  clearLit();
+  CHORDS[key].notes.forEach(m => { const el = keyEls[m]; if (el) el.classList.add('lit'); });
+}
+
+/* ---------- progression strip ---------- */
+const progEl = document.getElementById('prog');
+PROG.forEach(k => { const d = document.createElement('div'); d.textContent = CHORDS[k].label; progEl.appendChild(d); });
+
+/* ---------- piano keyboard ---------- */
+const NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const BLACK = new Set([1,3,6,8,10]);
+const pianoEl = document.getElementById('piano');
+const keyEls = {};
+(function buildKeys(){
+  for (let m=48; m<=72; m++){
+    if (BLACK.has(m%12)) continue;
+    const wk = document.createElement('div'); wk.className='wk'; wk.dataset.midi=m;
+    if (m%12===0){ const l=document.createElement('div'); l.className='lbl'; l.textContent='C'+(Math.floor(m/12)-1); wk.appendChild(l); }
+    keyEls[m] = wk;
+    addPlay(wk, m);
+    const nb = m+1;
+    if (BLACK.has(nb%12) && nb<=72){
+      const bk = document.createElement('div'); bk.className='bk'; bk.dataset.midi=nb;
+      keyEls[nb] = bk; addPlay(bk, nb); wk.appendChild(bk);
+    }
+    pianoEl.appendChild(wk);
+  }
+})();
+function addPlay(el, m){
+  el.addEventListener('pointerdown', async e => {
+    e.stopPropagation();
+    if (!ctx) makeAudio();
+    await ctx.resume();
+    pianoNote(m, ctx.currentTime, 0.3);
+    el.classList.add('hit'); setTimeout(()=>el.classList.remove('hit'), 200);
+  });
+}
+function flashKeys(midis, ms){
+  midis.forEach(m => { const el = keyEls[m]; if (el){ el.classList.add('hit'); setTimeout(()=>el.classList.remove('hit'), ms); } });
+}
+function clearLit(){ document.querySelectorAll('.lit').forEach(e=>e.classList.remove('lit')); }
+
+/* ---------- chord pads ---------- */
+const padsEl = document.getElementById('pads');
+Object.keys(CHORDS).forEach(k => {
+  const b = document.createElement('button'); b.className='pad'; b.textContent = CHORDS[k].label;
+  b.addEventListener('click', async () => {
+    if (!ctx) makeAudio();
+    await ctx.resume();
+    stab(k, ctx.currentTime, true);
+    document.getElementById('nowChord').textContent = CHORDS[k].label;
+  });
+  padsEl.appendChild(b);
+});
+
+/* ---------- toggles ---------- */
+function wireToggle(id, fn){
+  const el = document.getElementById(id);
+  el.addEventListener('click', () => { const on = fn(); el.classList.toggle('off', !on); });
+}
+wireToggle('togPiano', () => (onPiano = !onPiano));
+wireToggle('togDrums', () => (onDrums = !onDrums));
+wireToggle('togFx',    () => (onFx    = !onFx));
+</script>
+</body>
+</html>
